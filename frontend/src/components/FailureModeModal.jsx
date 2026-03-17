@@ -53,14 +53,13 @@ export default function FailureModeModal({ fm, onSave, onClose }) {
 
   return (
     <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="modal-panel">
+      <form className="modal-panel" onSubmit={handleSubmit}>
         <div className="modal-header">
           <h2>{fm ? "Edit Failure Mode" : "Add Failure Mode"}</h2>
-          <button className="modal-close" onClick={onClose} aria-label="Close">×</button>
+          <button type="button" className="modal-close" onClick={onClose} aria-label="Close">×</button>
         </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="modal-body">
+        <div className="modal-body">
             <div className="modal-form-grid">
 
               <div className="form-field full-width">
@@ -179,16 +178,15 @@ export default function FailureModeModal({ fm, onSave, onClose }) {
             </div>
           </div>
 
-          <div className="modal-footer">
-            <button type="button" className="btn btn-outline" onClick={onClose}>
-              Cancel
-            </button>
-            <button type="submit" className="btn btn-primary">
-              {fm ? "Save Changes" : "Add Failure Mode"}
-            </button>
-          </div>
-        </form>
-      </div>
+        <div className="modal-footer">
+          <button type="button" className="btn btn-outline" onClick={onClose}>
+            Cancel
+          </button>
+          <button type="submit" className="btn btn-primary">
+            {fm ? "Save Changes" : "Add Failure Mode"}
+          </button>
+        </div>
+      </form>
     </div>
   );
 }

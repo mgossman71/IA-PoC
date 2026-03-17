@@ -509,7 +509,7 @@ label {
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 20px;
+  padding: 24px 20px;
 }
 
 .modal-panel {
@@ -518,9 +518,10 @@ label {
   box-shadow: 0 8px 40px rgba(0,0,0,0.2);
   width: 100%;
   max-width: 680px;
-  max-height: 90vh;
-  display: flex;
-  flex-direction: column;
+  /* Grid constrains rows reliably against explicit height */
+  height: min(calc(100vh - 48px), 820px);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
   overflow: hidden;
 }
 
@@ -548,7 +549,7 @@ label {
 .modal-body {
   padding: 20px;
   overflow-y: auto;
-  flex: 1;
+  min-height: 0;
 }
 
 .modal-form-grid {
