@@ -1,7 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import NameModal from "./components/NameModal";
 import CIList from "./components/CIList";
 import CIEditor from "./components/CIEditor";
+
+/** Read CI id from current URL path, e.g. /ci/my-payments-api → "my-payments-api" */
+function ciFromPath() {
+  const m = window.location.pathname.match(/^\/ci\/(.+)/);
+  return m ? decodeURIComponent(m[1]) : null;
+}
 
 function App() {
   const [userName, setUserName] = useState(
@@ -15,7 +21,26 @@ function App() {
     }
     return id;
   });
-  const [currentCI, setCurrentCI] = useState(null);
+
+  // Initialise from URL so a page refresh lands on the right view
+  const [currentCI, setCurrentCI] = useState(() => ciFromPath());
+
+  // Sync browser back/forward buttons → React state
+  useEffect(() => {
+    const onPop = () => setCurrentCI(ciFromPath());
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
+
+  const navigateToCI = (ciId) => {
+    history.pushState({ ciId }, "", `/ci/${encodeURIComponent(ciId)}`);
+    setCurrentCI(ciId);
+  };
+
+  const navigateToList = () => {
+    history.pushState(null, "", "/");
+    setCurrentCI(null);
+  };
 
   const handleSetName = (name) => {
     sessionStorage.setItem("ia_user_name", name);
@@ -25,8 +50,8 @@ function App() {
   const handleLogout = () => {
     sessionStorage.removeItem("ia_user_name");
     sessionStorage.removeItem("ia_session_id");
+    navigateToList();
     setUserName("");
-    setCurrentCI(null);
   };
 
   if (!userName) {
@@ -48,7 +73,7 @@ function App() {
             {currentCI && (
               <button
                 className="btn-link-white"
-                onClick={() => setCurrentCI(null)}
+                onClick={navigateToList}
               >
                 ← All CIs
               </button>
@@ -70,13 +95,13 @@ function App() {
             ciId={currentCI}
             userName={userName}
             sessionId={sessionId}
-            onBack={() => setCurrentCI(null)}
+            onBack={navigateToList}
           />
         ) : (
           <CIList
             userName={userName}
             sessionId={sessionId}
-            onOpenCI={setCurrentCI}
+            onOpenCI={navigateToCI}
           />
         )}
       </main>
