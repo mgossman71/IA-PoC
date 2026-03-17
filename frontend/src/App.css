@@ -367,6 +367,8 @@ label {
   color: #5d4037;
 }
 .lock-banner strong { color: #e65100; }
+.lock-banner-expired { background: #fce4ec; border-color: #f48fb1; color: #880e4f; }
+.lock-banner-expired strong { color: #880e4f; }
 .lock-banner .lock-readonly-badge {
   background: #e65100;
   color: white;

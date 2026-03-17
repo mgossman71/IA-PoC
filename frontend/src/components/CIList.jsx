@@ -8,14 +8,28 @@ function formatDate(iso) {
   });
 }
 
+function relativeExpiry(isoString) {
+  const diff = new Date(isoString) - Date.now();
+  if (diff <= 0) return "expired";
+  const m = Math.floor(diff / 60000);
+  if (m < 1) return "< 1m left";
+  return `${m}m left`;
+}
+
 function LockBadge({ lock }) {
-  if (!lock) {
-    return <span className="badge-available">● Available</span>;
-  }
-  const exp = new Date(lock.expires_at);
+  const [, tick] = useState(0);
+
+  useEffect(() => {
+    if (!lock) return;
+    const id = setInterval(() => tick((n) => n + 1), 30_000);
+    return () => clearInterval(id);
+  }, [lock]);
+
+  if (!lock) return <span className="badge-available">● Available</span>;
+
   return (
-    <span className="badge-locked" title={`Expires ${exp.toLocaleTimeString()}`}>
-      🔒 {lock.user_name}
+    <span className="badge-locked" title={`Expires ${new Date(lock.expires_at).toLocaleTimeString()}`}>
+      🔒 {lock.user_name} · {relativeExpiry(lock.expires_at)}
     </span>
   );
 }

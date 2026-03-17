@@ -4,6 +4,37 @@ import FailureModeModal from "./FailureModeModal";
 
 const HEARTBEAT_MS = 5 * 60 * 1000;
 
+function LockCountdown({ expiresAt, onExpired }) {
+  const [label, setLabel] = useState("");
+  const [expired, setExpired] = useState(false);
+
+  useEffect(() => {
+    const tick = () => {
+      const diff = new Date(expiresAt) - Date.now();
+      if (diff <= 0) {
+        setLabel("Lock has expired");
+        setExpired(true);
+        onExpired?.();
+        return false; // stop ticking
+      }
+      const m = Math.floor(diff / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      setLabel(`${m}m ${String(s).padStart(2, "0")}s remaining`);
+      return true;
+    };
+
+    if (!tick()) return;
+    const id = setInterval(() => { if (!tick()) clearInterval(id); }, 1000);
+    return () => clearInterval(id);
+  }, [expiresAt, onExpired]);
+
+  return (
+    <span style={{ fontWeight: expired ? 700 : 400, color: expired ? "#c62828" : "inherit" }}>
+      {label}
+    </span>
+  );
+}
+
 function formatDateTime(iso) {
   if (!iso) return "—";
   return new Date(iso).toLocaleString(undefined, {
@@ -29,6 +60,7 @@ export default function CIEditor({ ciId, userName, sessionId, onBack }) {
   const [failureModes, setFailureModes] = useState([]);
   const [lockOwned, setLockOwned] = useState(false);
   const [lockInfo, setLockInfo] = useState(null);
+  const [lockExpired, setLockExpired] = useState(false);
   const [saving, setSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
   const [saveError, setSaveError] = useState(null);
@@ -140,6 +172,7 @@ export default function CIEditor({ ciId, userName, sessionId, onBack }) {
       await api.acquireLock(ciId, userName, sessionId);
       setLockOwned(true);
       setLockInfo(null);
+      setLockExpired(false);
       heartbeatRef.current = setInterval(
         () => api.sendHeartbeat(ciId, userName, sessionId).catch(console.warn),
         HEARTBEAT_MS
@@ -147,6 +180,7 @@ export default function CIEditor({ ciId, userName, sessionId, onBack }) {
     } catch (err) {
       if (err.status === 423) {
         setLockInfo(err.detail);
+        setLockExpired(false);
         alert(`Still locked by ${err.detail?.locked_by || "another user"}.`);
       }
     }
@@ -183,16 +217,22 @@ export default function CIEditor({ ciId, userName, sessionId, onBack }) {
     <div className="ci-editor">
       {/* Lock banner */}
       {!lockOwned && lockInfo && (
-        <div className="lock-banner">
+        <div className={`lock-banner${lockExpired ? " lock-banner-expired" : ""}`}>
           <span>
-            🔒 Locked for editing by <strong>{lockInfo.locked_by || lockInfo.user_name}</strong>
-            {lockInfo.expires_at && (
-              <> — expires {new Date(lockInfo.expires_at).toLocaleTimeString()}</>
+            🔒 {lockExpired
+              ? <>Lock held by <strong>{lockInfo.locked_by || lockInfo.user_name}</strong> has expired</>
+              : <>Locked for editing by <strong>{lockInfo.locked_by || lockInfo.user_name}</strong></>
+            }
+            {lockInfo.expires_at && !lockExpired && (
+              <> — <LockCountdown expiresAt={lockInfo.expires_at} onExpired={() => setLockExpired(true)} /></>
             )}
           </span>
           <span className="lock-readonly-badge">READ ONLY</span>
-          <button className="btn btn-sm btn-outline" onClick={handleRetryLock}>
-            Retry Edit
+          <button
+            className={`btn btn-sm ${lockExpired ? "btn-primary" : "btn-outline"}`}
+            onClick={handleRetryLock}
+          >
+            {lockExpired ? "Take Edit Lock" : "Retry Edit"}
           </button>
         </div>
       )}
