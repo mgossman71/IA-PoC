@@ -1,4 +1,4 @@
-# Impact Analysis PoC
+# Impact Analysis - Demo
 
 A web-based guided experience for Dependency Impact Analysis (FMEA), replacing the Excel-based template. Built for Target platform teams to assess upstream dependency risks by CI (Configuration Item).
 
@@ -47,10 +47,11 @@ Open **http://localhost:5173** in your browser.
    - Function/Feature affected
    - Failure mode of the upstream dependency
    - Dependency Severity (Hard / Soft / Optional / Boot-Only)
-   - Effects on your service, guests, and workers
+   - Effect on your service
    - SEV × OCC × DET scores → RPN calculated automatically and color-coded (green / orange / red)
    - Runbook link
-4. **Export** — download an `.xlsx` file matching the original template format (green header row)
+4. **View JSON** — click the `{ }` button on any row to inspect the raw JSON for that failure mode
+5. **Export** — download an `.xlsx` file matching the original template format (green header row)
 5. **Sign out** — releases any CI locks and clears your session
 
 The browser **Back** button navigates within the app (CI editor → CI list) rather than leaving the page. Refreshing the page at any point restores the correct view.
