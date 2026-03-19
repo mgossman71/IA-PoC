@@ -347,7 +347,10 @@ export default function CIEditor({ ciId, userName, sessionId, onBack }) {
               <span>JSON — {jsonFM.failure_mode || jsonFM.id}</span>
               <button className="btn-icon" onClick={() => setJsonFM(null)} title="Close">✕</button>
             </div>
-            <pre className="json-modal-body">{JSON.stringify(jsonFM, null, 2)}</pre>
+            <pre className="json-modal-body">{JSON.stringify(
+                (({ effect_on_guest, effect_on_worker, ...rest }) => rest)(jsonFM),
+                null, 2
+              )}</pre>
           </div>
         </div>
       )}

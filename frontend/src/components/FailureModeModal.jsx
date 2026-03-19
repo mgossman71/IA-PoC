@@ -6,8 +6,6 @@ const EMPTY = {
   failure_mode: "",
   dependency_severity: "",
   effect_on_service: "",
-  effect_on_guest: "",
-  effect_on_worker: "",
   sev: "",
   occ: "",
   det: "",
