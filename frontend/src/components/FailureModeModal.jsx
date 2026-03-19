@@ -116,28 +116,6 @@ export default function FailureModeModal({ fm, onSave, onClose }) {
               </div>
 
               <div className="form-field">
-                <label htmlFor="eg">Effect on Guest</label>
-                <textarea
-                  id="eg"
-                  value={form.effect_on_guest}
-                  onChange={set("effect_on_guest")}
-                  placeholder="Customer-facing impact…"
-                  style={{ minHeight: 60 }}
-                />
-              </div>
-
-              <div className="form-field">
-                <label htmlFor="ew">Effect on Worker</label>
-                <textarea
-                  id="ew"
-                  value={form.effect_on_worker}
-                  onChange={set("effect_on_worker")}
-                  placeholder="Impact on team members…"
-                  style={{ minHeight: 60 }}
-                />
-              </div>
-
-              <div className="form-field">
                 <label htmlFor="sev">Severity (SEV)</label>
                 <select id="sev" value={form.sev} onChange={set("sev")}>
                   <option value="">— Select —</option>
