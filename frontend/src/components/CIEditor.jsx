@@ -66,6 +66,7 @@ export default function CIEditor({ ciId, userName, sessionId, onBack }) {
   const [saveError, setSaveError] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingFM, setEditingFM] = useState(null);
+  const [jsonFM, setJsonFM] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -294,6 +295,7 @@ export default function CIEditor({ ciId, userName, sessionId, onBack }) {
                 <th>DET</th>
                 <th>RPN</th>
                 <th>Runbook</th>
+                <th></th>
                 {lockOwned && <th>Actions</th>}
               </tr>
             </thead>
@@ -314,6 +316,9 @@ export default function CIEditor({ ciId, userName, sessionId, onBack }) {
                       ? <a href={fm.runbook_links} target="_blank" rel="noopener noreferrer" className="link-icon" title={fm.runbook_links}>🔗</a>
                       : <span className="text-muted">—</span>}
                   </td>
+                  <td className="td-center">
+                    <button className="btn-json" onClick={() => setJsonFM(fm)} title="View JSON">{"{ }"}</button>
+                  </td>
                   {lockOwned && (
                     <td className="td-actions">
                       <button className="btn-icon" onClick={() => handleEdit(fm)} title="Edit">✏</button>
@@ -333,6 +338,18 @@ export default function CIEditor({ ciId, userName, sessionId, onBack }) {
           onSave={handleModalSave}
           onClose={() => setModalOpen(false)}
         />
+      )}
+
+      {jsonFM && (
+        <div className="json-modal-overlay" onClick={() => setJsonFM(null)}>
+          <div className="json-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="json-modal-header">
+              <span>JSON — {jsonFM.failure_mode || jsonFM.id}</span>
+              <button className="btn-icon" onClick={() => setJsonFM(null)} title="Close">✕</button>
+            </div>
+            <pre className="json-modal-body">{JSON.stringify(jsonFM, null, 2)}</pre>
+          </div>
+        </div>
       )}
     </div>
   );
