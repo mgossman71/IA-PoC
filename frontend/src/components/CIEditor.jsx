@@ -289,8 +289,6 @@ export default function CIEditor({ ciId, userName, sessionId, onBack }) {
                 <th>Failure Mode</th>
                 <th>Dep. Severity</th>
                 <th>Effect / Service</th>
-                <th>Effect / Guest</th>
-                <th>Effect / Worker</th>
                 <th>SEV</th>
                 <th>OCC</th>
                 <th>DET</th>
@@ -307,8 +305,6 @@ export default function CIEditor({ ciId, userName, sessionId, onBack }) {
                   <td className="td-text" title={fm.failure_mode}>{fm.failure_mode || <span className="text-muted">—</span>}</td>
                   <td className="td-center"><DepSevBadge value={fm.dependency_severity} /></td>
                   <td className="td-text" title={fm.effect_on_service}>{fm.effect_on_service || <span className="text-muted">—</span>}</td>
-                  <td className="td-text" title={fm.effect_on_guest}>{fm.effect_on_guest || <span className="text-muted">—</span>}</td>
-                  <td className="td-text" title={fm.effect_on_worker}>{fm.effect_on_worker || <span className="text-muted">—</span>}</td>
                   <td className="td-center score-cell">{fm.sev || <span className="text-muted">—</span>}</td>
                   <td className="td-center score-cell">{fm.occ || <span className="text-muted">—</span>}</td>
                   <td className="td-center score-cell">{fm.det || <span className="text-muted">—</span>}</td>

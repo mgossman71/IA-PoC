@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 import os
 
-app = FastAPI(title="Impact Analysis Tool")
+app = FastAPI(title="Impact Analysis - Demo")
 
 app.add_middleware(
     CORSMiddleware,

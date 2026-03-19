@@ -65,7 +65,7 @@ function App() {
           <div className="header-brand">
             <div className="bullseye" aria-hidden="true" />
             <div>
-              <div className="header-title">Impact Analysis</div>
+              <div className="header-title">Impact Analysis - Demo</div>
               <div className="header-subtitle">Dependency Risk Assessment</div>
             </div>
           </div>

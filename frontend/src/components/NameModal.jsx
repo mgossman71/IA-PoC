@@ -20,7 +20,7 @@ export default function NameModal({ onSubmit }) {
         <div className="name-modal-logo">
           <div className="name-modal-bullseye" />
         </div>
-        <h1>Impact Analysis</h1>
+        <h1>Impact Analysis - Demo</h1>
         <p>Dependency Risk Assessment Tool</p>
         <form className="name-modal-form" onSubmit={handleSubmit}>
           <label htmlFor="ia-name">Your Name</label>
